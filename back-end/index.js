@@ -25,16 +25,16 @@ app.get('/spotify/login', (req, res) => {
 
   const options = {
     hostname: 'accounts.spotify.com',
-    port: 443,
+    port: 443, // PORT: HTTPS
     path: '/api/token',
     method: 'POST',
-    headers: {
+    headers: { // Headers de la requête, on envoie le client ID et le client secret en base64 (voir doc Spotify)
       'content-type': 'application/x-www-form-urlencoded',
       authorization: 'Basic ' + (new Buffer(SPOTIFY_CLIENT_ID + ':' + SPOTIFY_CLIENT_SECRET).toString('base64'))
     }
   }
 
-  const query = https.request(options, (res) => {
+  const query = https.request(options, (res) => { // en NODE.JS
     res.on('data', (d) => {
       process.stdout.write(d);
     })
@@ -43,14 +43,14 @@ app.get('/spotify/login', (req, res) => {
     console.error(e);
   })
 
-  query.write(querystring.stringify({
+  query.write(querystring.stringify({ // On envoie les données de la requête
     code: req.query.code,
     redirect_uri: "http://localhost:5173",
     grant_type: "authorization_code"
   }))
 
   query.end()
-  res.send("Spotify Login !")
+  res.send("Spotify Login !") // vérification que la route soit bien appelée
 })
 
 app.get('/', (req, res) => {
